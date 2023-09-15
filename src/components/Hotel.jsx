@@ -1,4 +1,3 @@
-import { array, string } from 'prop-types';
 import { getPbImageURL } from '@/utils/getPbImageURL';
 import { numberWithComma } from '@/utils/numberWithComma';
 import { Link } from 'react-router-dom';
@@ -50,8 +49,3 @@ function Hotel({ data, selectCategory }) {
 }
 
 export default Hotel;
-
-Hotel.propTypes = {
-  data: string,
-  selectCategory: array,
-};
