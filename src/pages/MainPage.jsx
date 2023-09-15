@@ -90,7 +90,7 @@ function MainPage() {
         </ul>
 
         <section className='mx-auto max-w-2xl px-4'>
-          <HotelList title='야!무지개놀자~!' subtitle='재밌게 꼭 놀자!'>
+          <HotelList title='야!무지개놀자~!' subtitle='재밌게 놀자!'>
             <Category
               className='justify-center gap-2 py-3 max-[340px]:text-sm max-[340px]:leading-6 '
               category={category}
