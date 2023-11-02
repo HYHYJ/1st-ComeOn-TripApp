@@ -1,4 +1,5 @@
 import Button from './Button';
+import PropTypes from 'prop-types';
 
 function HotelReviewEdit({ isShow, reviewRef, handleSubmitReview, handleShowReview }) {
   return (
@@ -10,6 +11,7 @@ function HotelReviewEdit({ isShow, reviewRef, handleSubmitReview, handleShowRevi
           </Button>
         )}
       </div>
+
       {isShow && (
         <form onSubmit={handleSubmitReview} className='pb-10'>
           <textarea
@@ -37,3 +39,10 @@ function HotelReviewEdit({ isShow, reviewRef, handleSubmitReview, handleShowRevi
   );
 }
 export default HotelReviewEdit;
+
+HotelReviewEdit.propTypes = {
+  isShow: PropTypes.bool,
+  reviewRef: PropTypes.any,
+  handleSubmitReview: PropTypes.func,
+  handleShowReview: PropTypes.func,
+};

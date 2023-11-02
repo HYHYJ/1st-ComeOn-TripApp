@@ -2,14 +2,6 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import pb from '@/api/pocketbase';
 
-// import useAuthStore from '@/store/useAuthStore';
-
-// const isAuth = useAuthStore((state) => state.isAuth); 로그인 회원만 사용가능
-// ex) {isAuth &&<div>로그인 회원만 이용할 수 있습니다.</div> }
-
-// const user = useAuthStore((state) => state.user); 회원정보 가져올 때
-// console.log(user); const userId = user.id; 로그인한 회원의 정보 출력
-
 const initialAuthState = {
   isAuth: false,
   user: '',

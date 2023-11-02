@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { getPbImageURL } from '@/utils/getPbImageURL';
+import Guest from '@/components/Guest';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
+import MetaTag from '@/components/MetaTag';
+import useAuthStore from '@/store/useAuthStore';
 import MySelecModal from '@/components/MySelecModal';
 import MyBasicButton from '@/components/MyBasicButton';
-import useAuthStore from '@/store/useAuthStore';
-import Guest from '@/components/Guest';
 
 function MyPage() {
   const isAuth = useAuthStore((state) => state.isAuth);
   const user = useAuthStore((state) => state.user);
   const [avatarSrc, setAvatarSrc] = useState('/My-ProfileBasic.jpeg');
+  const [selectedImage, setSelectedImage] = useState('');
+  const [bgImgSrc, setBgImgSrc] = useState(selectedImage);
 
   useEffect(() => {
     if (user && user.avatar) {
@@ -21,6 +23,29 @@ function MyPage() {
       } catch (error) {
         setAvatarSrc('/My-ProfileBasic.jpeg');
       }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const images = [
+      '/my-randombg1.png',
+      '/my-randombg2.png',
+      '/my-randombg3.png',
+      '/my-randombg4.png',
+    ];
+
+    const randomIndex = Math.floor(Math.random() * images.length);
+    setSelectedImage(images[randomIndex]);
+
+    if (user && user.bgimg) {
+      try {
+        const url = getPbImageURL(user, 'bgimg');
+        setBgImgSrc(url);
+      } catch (error) {
+        setBgImgSrc(images[randomIndex]);
+      }
+    } else {
+      setBgImgSrc(images[randomIndex]);
     }
   }, [user]);
 
@@ -62,12 +87,14 @@ function MyPage() {
 
   return (
     <>
-      <Helmet>
-        <title>야무지개놀자</title>
-      </Helmet>
-      <Header search='search' back='back' cart='cart' title='마이 페이지'>
-        메인페이지
-      </Header>
+      <MetaTag title='마이 페이지' description='마이 페이지' />
+      <Header
+        search='search'
+        back='back'
+        cart='cart'
+        title='마이 페이지'
+        className='ml-10 text-xl font-semibold'
+      ></Header>
       {!isAuth && <Guest></Guest>}
       {isAuth && (
         <>
@@ -76,17 +103,21 @@ function MyPage() {
               type='button'
               className='h-28 w-full max-w-2xl overflow-hidden bg-gray sm:mb-0 sm:h-40 '
             >
-              <img
-                src={pageState.selectedImage}
-                alt='배경이미지'
-                className='absolute left-1/2  h-full w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden border-b-2 border-secondary object-cover shadow-md'
-              />
-              <img
-                src={avatarSrc}
-                alt='프로필사진'
-                className='absolute left-1/2 top-1/2 ml-[-45px] mt-3 aspect-square max-h-[90px] min-h-[90px] min-w-[90px] max-w-[90px] rounded-full border-2 border-secondary bg-gray object-cover shadow-md 
+              <div>
+                <img
+                  src={bgImgSrc}
+                  alt='배경이미지'
+                  className='absolute left-1/2  h-full w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden border-b-2 border-secondary object-cover shadow-md'
+                />
+              </div>
+              <div>
+                <img
+                  src={avatarSrc}
+                  alt='프로필사진'
+                  className='absolute left-1/2 top-1/2 ml-[-45px] mt-3 aspect-square max-h-[90px] min-h-[90px] min-w-[90px] max-w-[90px] rounded-full border-2 border-secondary bg-gray object-cover shadow-md sm:mt-[30px]
           md:ml-[-50px] md:mt-[28px] md:max-h-[100px] md:max-w-[100px] lg:ml-[-60px] lg:mt-[15px] lg:max-h-[120px] lg:max-w-[120px]'
-              />
+                />
+              </div>
             </button>
             <h2 className='sr-only'></h2>
           </section>
@@ -124,11 +155,13 @@ function MyPage() {
                     option1='채팅'
                     option2='취소'
                   >
-                    <div>상담원 통화 가능 시간</div>
-                    <div>평일(공휴일 제외)</div>
-                    <div>09:00~17:00</div>
-                    <div>02-1234-5678</div>
-                    <div>채팅으로 연결할까요?</div>
+                    <div aria-labelledby='modal-description'>
+                      <p>상담원 통화 가능 시간</p>
+                      <p>평일(공휴일 제외)</p>
+                      <p>09:00~17:00</p>
+                      <p>02-1234-5678</p>
+                      <p>채팅으로 연결할까요?</p>
+                    </div>
                   </MySelecModal>
                 )}
               </li>
@@ -163,11 +196,12 @@ function MyPage() {
                     option2='탈퇴'
                     MoveTo2='mywithdrawal'
                   >
-                    <div>정말 탈퇴하시나요?</div>
-                    <div>2023.09.06 기준</div>
-                    <div>가입자 23m 돌파</div>
-                    <div>불편사항</div>
-                    <div>☎️02-1234-5678</div>
+                    <div aria-labelledby='modal-description'></div>
+                    <p>정말 탈퇴하시나요?</p>
+                    <p>2023.09.06 기준</p>
+                    <p>가입자 23m 돌파</p>
+                    <p>불편사항</p>
+                    <p>☎️02-1234-5678</p>
                   </MySelecModal>
                 )}
               </li>

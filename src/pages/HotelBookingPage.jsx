@@ -2,37 +2,49 @@ import { usePocketData } from '@/api/usePocketData';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { numberWithComma } from '@/utils/numberWithComma';
 import { getPbImageURL } from '@/utils/getPbImageURL';
 import { toast, Toaster } from 'react-hot-toast';
+import useAuthStore from '@/store/useAuthStore';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
 import Spinner from '@/components/Spinner';
-import useStorage from '@/Hook/useStorage';
+import MetaTag from '@/components/MetaTag';
 
-function BookingPage() {
-  const { id, title } = useParams();
+function HotelBookingPage() {
+  const { id, hotel, title, checkin, checkout } = useParams();
   const { getIdData } = usePocketData('room');
+  const { createData: createOrder } = usePocketData('order');
+  const { updateData: updateUser } = usePocketData('users');
   const { data: roomData, isLoading } = useQuery(['room', id], () => getIdData(id));
 
-  const { updateData: updateUser } = usePocketData('users');
-  const { storageData: authUser } = useStorage('pocketbase_auth');
-
+  const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
+  const userId = user.id;
 
   const handlePayment = () => {
-    const userId = authUser?.model?.id;
+    const orderData = {
+      username: user.username,
+      hotelTitle: title,
+      hotelId: hotel,
+      roomId: id,
+      checkin,
+      checkout,
+      price: roomData.price,
+    };
+
     toast((t) => (
       <div className='flex-col items-center gap-5'>
         <span className='text-lg'>결제 하시겠습니까?</span>
         <div className='flex gap-10 pt-2'>
-          <button
-            className='rounded-lg bg-primary px-4 py-2 text-white'
-            onClick={() => {
+          <Button
+            type='submit'
+            className='rounded-lg bg-primary px-5 py-2 text-white'
+            onClick={async () => {
               toast.dismiss(t.id);
+              const order = await createOrder(orderData);
               updateUser(userId, {
-                'bookedRoom+': id,
+                'orderHotel+': order.id,
               });
               toast.success('결제가 완료되었습니다.');
               setTimeout(() => {
@@ -42,8 +54,9 @@ function BookingPage() {
             }}
           >
             예
-          </button>
+          </Button>
           <Button
+            type='button'
             className='rounded-lg bg-accent px-1 py-2 text-white'
             onClick={() => toast.dismiss(t.id)}
           >
@@ -60,9 +73,7 @@ function BookingPage() {
 
   return (
     <>
-      <Helmet>
-        <title>예약</title>
-      </Helmet>
+      <MetaTag title={`${title} 예약`} description='호텔/리조트 숙소 예약하는 페이지' />
       <Header back='back' className='mr-7 text-xl font-semibold' title='예약' />
       <section className='px-4 pb-20'>
         <h2 className='mx-auto flex max-w-[39rem] justify-center border-b border-gray px-4 pt-2 text-xl font-bold'>
@@ -71,7 +82,12 @@ function BookingPage() {
         <article key={roomData.id} className='flex justify-center pt-3'>
           <div>
             <figure>
-              <img src={getPbImageURL(roomData, 'img')} alt={roomData.title} className='max-h-96' />
+              <img
+                src={getPbImageURL(roomData, 'img')}
+                alt={roomData.title}
+                width='640'
+                height='400'
+              />
               <figcaption className='sr-only'>{roomData.title}</figcaption>
             </figure>
             <h3 className=' pb-4 pt-1 text-xl font-bold'>{roomData.title}</h3>
@@ -81,12 +97,12 @@ function BookingPage() {
             <div className='flex justify-between border-b border-gray pb-2 font-semibold'>
               <div>
                 <p>체크인</p>
-                <p>2023.09.28(목)</p>
+                <p>{checkin}</p>
                 <p>15:00</p>
               </div>
               <div>
                 <p>체크아웃</p>
-                <p>2023.09.30(토)</p>
+                <p>{checkout}</p>
                 <p>11:00</p>
               </div>
             </div>
@@ -106,7 +122,7 @@ function BookingPage() {
 
         <Toaster
           toastOptions={{
-            duration: 1500, 
+            duration: 1500,
             success: {
               style: {
                 background: '#5D6FFF',
@@ -115,11 +131,11 @@ function BookingPage() {
             },
           }}
           containerStyle={{
-            top: 420,
+            top: 300,
           }}
         />
       </section>
     </>
   );
 }
-export default BookingPage;
+export default HotelBookingPage;

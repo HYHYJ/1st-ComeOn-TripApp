@@ -8,21 +8,7 @@ export function usePocketData(collection) {
   const getListData = (options = {}) =>
     pb.collection(collection).getFullList({ ...defaultOptions, ...options });
 
-  // const { getListData: HotelData  } = usePocketData('hotel');
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data ,
-  // } = useQuery(['hotel'], () => getListData());
-
   const getIdData = (id, options = {}) => pb.collection(collection).getOne(id, options);
-
-  // const { getIdData } = usePocketData('hotel');
-  // const {
-  // isLoading,
-  // isError,
-  // data,
-  // } = useQuery(['hotel', id], () => getIdData(id));
 
   const createData = (data) => pb.collection(collection).create(data);
 
@@ -30,11 +16,14 @@ export function usePocketData(collection) {
 
   const deleteData = (id) => pb.collection(collection).delete(id);
 
+  const passwordReset = (email) => pb.collection(collection).requestPasswordReset(email);
+
   return {
     getListData,
     getIdData,
     createData,
     updateData,
     deleteData,
+    passwordReset,
   };
 }

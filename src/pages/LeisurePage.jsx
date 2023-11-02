@@ -1,13 +1,14 @@
 import { usePocketData } from '@/api/usePocketData';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Category from '@/components/Category';
 import Entertainment from '@/components/Entertainment';
 import Exhibition from '@/components/Exhibition';
 import Header from '@/components/Header';
 import LeisureBrand from '@/components/LeisureBrand';
 import LeisureLink from '@/components/LeisureLink';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import MetaTag from '@/components/MetaTag';
 
 function LeisurePage() {
   const { getListData: getLeisureData } = usePocketData('leisure');
@@ -22,6 +23,7 @@ function LeisurePage() {
 
   return (
     <>
+      <MetaTag title='레저' description='레저' />
       <Header
         className='ml-10 text-xl font-semibold'
         back='back'
@@ -29,7 +31,7 @@ function LeisurePage() {
         cart='cart'
         title='레저/티켓'
       />
-      <section>
+      <section className='pb-20'>
         <h2 className='sr-only'>레저 페이지</h2>
         <div className='flex justify-between px-4 text-[10px]'>
           <Link to='/leisure/테마파크'>
@@ -72,7 +74,7 @@ function LeisurePage() {
         <div className='mx-5 mt-[-70px] rounded-[4px] border border-[#e6e6e6] bg-white px-4 pt-6'>
           <h3 className='text-[18px] font-bold'>인기놀거리 10% 쿠폰할인</h3>
           <span className='text-[14px] font-medium text-primary'>
-            여름 놀거리 야놀자에서 쿠폰받고 즐기자!
+            여름 놀거리 야무지개놀자에서 쿠폰받고 즐기자!
           </span>
           <Entertainment data={leisureData} selectCategory={'인기'} />
           <a

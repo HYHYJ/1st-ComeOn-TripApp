@@ -9,7 +9,7 @@ import router from './routes';
 const querClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 20 * 60 * 1000,
+      cacheTime: 30 * 60 * 1000,
     },
   },
 });

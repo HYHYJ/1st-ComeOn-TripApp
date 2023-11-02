@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 function HotelIntro({ intro }) {
   return (
     <section className='mx-auto px-4 max-w-xl pt-5 pb-40'>
@@ -7,3 +9,7 @@ function HotelIntro({ intro }) {
   );
 }
 export default HotelIntro;
+
+HotelIntro.propTypes = {
+  intro: PropTypes.string,
+};

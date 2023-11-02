@@ -1,14 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import Navigation from './Navigation';
+import ScrollToTop from '@/utils/ScrollToTop';
 
 function RootLayout() {
   return (
-    <div role='container' className='mx-auto max-w-3xl font-suit'>
-      <main>
-        <Outlet />
-        <Navigation />
-      </main>
-    </div>
+    <main className='mx-auto max-w-3xl font-suit'>
+      <ScrollToTop />
+      <Outlet />
+      <Navigation />
+    </main>
   );
 }
 export default RootLayout;

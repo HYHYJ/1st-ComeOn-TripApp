@@ -1,15 +1,16 @@
-import { useState, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import { toast, Toaster } from 'react-hot-toast';
-import { getPbImageURL } from '@/utils/getPbImageURL';
-import { usePocketData } from '@/api/usePocketData';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import Header from '@/components/Header';
-import useAuthStore from '@/store/useAuthStore';
-import Spinner from '@/components/Spinner';
+import { useState, useRef } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import { usePocketData } from '@/api/usePocketData';
+import { getPbImageURL } from '@/utils/getPbImageURL';
+import { useNavigate, useParams } from 'react-router-dom';
 import pb from '@/api/pocketbase';
+import Guest from '@/components/Guest';
+import Header from '@/components/Header';
+import MetaTag from '@/components/MetaTag';
+import Spinner from '@/components/Spinner';
+import useAuthStore from '@/store/useAuthStore';
 
 const resetData = {
   title: '',
@@ -18,16 +19,15 @@ const resetData = {
 };
 
 function MyQnaDetailPage() {
-  const { id } = useParams(); //주소창에서 이 해당 아이디 가져다가
-  const { getIdData: getQna } = usePocketData('qna'); //qna 테이블에서 id 챙겨
-  // const { getListData: getQnaList } = usePocketData('qna');
+  const { id } = useParams();
+  const { getIdData: getQna } = usePocketData('qna');
   const navigate = useNavigate();
 
   const isAuth = useAuthStore((state) => state.isAuth);
+  const user = useAuthStore((state) => state.user);
   const { updateData: updateUser } = usePocketData('users');
   const { updateData: updateQna } = usePocketData('qna');
 
-  const user = useAuthStore((state) => state.user);
   const { data: qnaData, isLoading } = useQuery(['qna', id], () => getQna(id));
 
   const titleRef = useRef(null);
@@ -46,7 +46,6 @@ function MyQnaDetailPage() {
         const qna = await pb.collection('qna').getOne(id);
         const { title, text, img } = qna;
 
-        // 초기 데이터 저장
         setInitialData({
           title,
           text,
@@ -88,16 +87,8 @@ function MyQnaDetailPage() {
       return;
     }
     try {
-      // const promise = updateQna(id, formData).then((updated) => {
-      //   updateUser(userid, {
-      //     qna: updated.id,
-      //   });
-      // });
       const promise = updateQna(id, formData);
-      // const created = await createQna(formData);
-      // await updateUser(id, {
-      //   'qna+': created.id,
-      // });
+
       toast.promise(promise, {
         loading: '반영 중...',
         success: () => {
@@ -114,7 +105,7 @@ function MyQnaDetailPage() {
   const handleReset = () => {
     titleRef.current.value = initialData.title;
     textRef.current.value = initialData.text;
-    setFileName(''); // 파일명 초기화
+    setFileName('');
   };
 
   const handleUpload = async (e) => {
@@ -126,11 +117,8 @@ function MyQnaDetailPage() {
       }));
       setFileName(fileImages[0].label);
 
-      // 여기서 바로 파일 전송
       const formData = new FormData();
       formData.append('img', files[0]);
-
-      // 서버에 파일 전송하는 코드...
     }
   };
 
@@ -140,15 +128,18 @@ function MyQnaDetailPage() {
 
   return (
     <>
-      {isAuth && (
-        <>
-          <Helmet>
-            <title>야무지개놀자</title>
-          </Helmet>
-          <Header search='search' back='back' cart='cart' title='1:1문의'>
-            1:1문의
-          </Header>
+      <>
+        <MetaTag title='1:1문의' description='1:1문의' />
+        <Header
+          search='search'
+          back='back'
+          cart='cart'
+          title='1:1문의'
+          className='ml-10 text-xl font-semibold'
+        ></Header>
 
+        {!isAuth && <Guest></Guest>}
+        {isAuth && (
           <section className='absolute left-1/2 top-1/2 flex h-[73%] w-[90%] -translate-x-1/2 -translate-y-1/2 transform rounded-3xl bg-lightPurple p-3 shadow-lg sm:max-w-[500px] sm:p-5'>
             <form
               className='flex h-full w-full flex-col justify-between'
@@ -218,9 +209,9 @@ function MyQnaDetailPage() {
                     className='ml-auto mr-1 flex-shrink-0 rounded-md border-[1px] p-1 hover:border-primary hover:bg-primary hover:text-white hover:shadow-md'
                     onClick={(e) => {
                       if (isTitleEditMode && isTextEditMode) {
-                        handleUpdate(e); // 'e'를 인자로 넘겨줍니다.
+                        handleUpdate(e);
                       } else {
-                        setIsTitleEditMode(true); // 제목 입력 필드 편집 모드 활성화
+                        setIsTitleEditMode(true);
                         setIsTextEditMode(true);
                       }
                     }}
@@ -257,8 +248,8 @@ function MyQnaDetailPage() {
               }}
             />
           </section>
-        </>
-      )}
+        )}
+      </>
     </>
   );
 }

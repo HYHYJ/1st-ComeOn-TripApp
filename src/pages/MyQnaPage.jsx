@@ -1,19 +1,18 @@
-import { useEffect, Children, useState, useCallback } from 'react';
-import { usePocketData } from '@/api/usePocketData';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { Helmet } from 'react-helmet-async';
-import { getPbImageURL } from '@/utils/getPbImageURL';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+import { usePocketData } from '@/api/usePocketData';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Guest from '@/components/Guest';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
-import MyCircleProfile from '@/components/MyCircleProfile';
 import MyList from '@/components/MyList';
 import Spinner from '@/components/Spinner';
+import MetaTag from '@/components/MetaTag';
 import useAuthStore from '@/store/useAuthStore';
-import { Toaster } from 'react-hot-toast';
 import MySelecModal from '@/components/MySelecModal';
+import MyCircleProfile from '@/components/MyCircleProfile';
 
 function MyQnaPage() {
   const isAuth = useAuthStore((state) => state.isAuth);
@@ -30,7 +29,7 @@ function MyQnaPage() {
         item[fileName]
       }`;
     } else {
-      return '/public/Myzipedairplane.jpg';
+      return '/Myzipedairplane.jpg';
     }
   };
 
@@ -40,12 +39,13 @@ function MyQnaPage() {
 
   const qnaData = userData?.expand?.qna;
 
-  if (!qnaData || qnaData.length === 0) {
-    toast('❌ 작성된 QnA가 없습니다.');
-  } else {
-    toast.success('QnA 데이터 로드 성공');
-  }
-
+  useEffect(() => {
+    if (!qnaData || qnaData.length === 0) {
+      toast('❌ 작성된 QnA가 없습니다.');
+    } else {
+      toast.success('가져오는 중');
+    }
+  }, [qnaData]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -61,35 +61,23 @@ function MyQnaPage() {
     }
   };
 
-  // const handleDelete = () => {
-  //   mutation.mutate(selectedItem.id, {
-  //     onSuccess: () => {
-  //       toast.success('QnA가 성공적으로 삭제되었습니다.');
-  //       queryClient.invalidateQueries(['deleteQna']);
-  //       setIsModalOpen(false); // 모달 창 닫기
-  //     },
-  //     onError: () => {
-  //       toast.error('QnA 삭제에 실패했습니다.');
-  //     },
-  //   });
-  // };
-
   if (isLoading) {
     return <Spinner />;
   }
 
   return (
     <>
+      <MetaTag title='1:1문의 내역' description='1:1문의 내역' />
+      <Header
+        search='search'
+        back='back'
+        cart='cart'
+        title='1:1문의 내역'
+        className='ml-10 text-xl font-semibold'
+      ></Header>
+      {!isAuth && <Guest></Guest>}
       {isAuth && (
         <>
-          <Helmet>
-            <title>야무지개놀자</title>
-          </Helmet>
-          <Header search='search' back='back' cart='cart' title='마이 페이지'>
-            메인페이지
-          </Header>
-
-          {/* 마이페이로 돌아갈 수 있는 버튼 기능의 이미지 */}
           <MyCircleProfile
             towhere='/mypage'
             src={getPbImageURL(user, 'avatar')}
@@ -100,7 +88,7 @@ function MyQnaPage() {
           <section className='box-border flex  justify-center pb-20'>
             <ul className=' box-border h-auto w-2/3 rounded-2xl bg-lightPurple px-3 pb-1 pt-4 text-sm'>
               <li className='box-border flex flex-row items-center justify-between  pb-3 text-primary'>
-                <div className='font-semibold'>문의 내역 ({qnaData?.length || '로딩중...'})</div>
+                <div className='font-semibold'>문의 내역 ({qnaData?.length || '0'})</div>
                 <Link to='mynewqna' tabIndex='-1'>
                   <Button type='button' className='rounded-md bg-primary px-1 text-white'>
                     문의하기
@@ -110,9 +98,9 @@ function MyQnaPage() {
 
               {qnaData &&
                 qnaData.length > 0 &&
-                [...qnaData] // 원본 배열을 변경하지 않기 위해 복사본 생성
+                [...qnaData]
 
-                  .sort((a, b) => new Date(b.created) - new Date(a.created)) // created 기준 내림차순 정렬
+                  .sort((a, b) => new Date(b.created) - new Date(a.created))
                   .map((item) => (
                     <MyList
                       link={`/MyQnaDetailPage/${item.id}`}

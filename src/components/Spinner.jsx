@@ -5,8 +5,8 @@ function Spinner() {
       <svg
         xmlns='http://www.w3.org/2000/svg'
         style={{margin: 'auto', background: 'transparent'}}
-        width='150'
-        height='150'
+        width='120'
+        height='120'
         display='block'
         preserveAspectRatio='xMidYMid'
         viewBox='0 0 100 100'

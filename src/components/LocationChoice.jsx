@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Button from './Button'
 import LocationSideButton from './LocationSideButton';
 import LocationSideButtonList from './LocationSideButtonList';
 

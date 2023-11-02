@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function MySelecModal({
@@ -14,17 +14,16 @@ function MySelecModal({
   const modalRef = useRef();
 
   useEffect(() => {
+    modalRef.current.focus();
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onClose();
       }
     }
 
-    // 클릭 이벤트 리스너 등록
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      // 컴포넌트 언마운트 시 리스너 제거
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [onClose]);
@@ -37,17 +36,22 @@ function MySelecModal({
       <section
         className='absolute right-1/2 top-[5%] z-50 translate-x-1/2 translate-y-1/2 sm:top-[13%]'
         ref={modalRef}
+        aria-modal='true'
+        role='dialog'
+        aria-describedby='modal-description'
+        tabIndex='-1'
       >
         <div className='h-60 w-72 rounded-lg border-[1px] bg-white  bg-opacity-70 p-4 font-semibold shadow-md'>
-          <p className='p-6 text-center text-lg'>{children}</p>
+          <div id='modal-description' className='p-6 text-center text-lg'>
+            {children}
+          </div>
           <div className='fixed bottom-4 right-4 flex gap-3 text-white'>
-            <Link to={MoveTo}>
-              <button
-                className='rounded bg-thirdary px-2 py-1 hover:bg-primary'
-                onClick={onOption1}
-              >
-                {option1}
-              </button>
+            <Link
+              to={MoveTo}
+              className='rounded bg-thirdary px-2 py-1 hover:bg-primary'
+              onClick={onOption1}
+            >
+              {option1}
             </Link>
 
             <Link to={MoveTo2}>

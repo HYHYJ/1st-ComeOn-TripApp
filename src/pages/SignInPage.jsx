@@ -1,19 +1,25 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
 import useAuthStore from '@/store/useAuthStore';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Form from '@/components/Form';
+import MetaTag from '@/components/MetaTag';
 
 function SignInPage() {
   const { signIn } = useAuthStore();
   const navigate = useNavigate();
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const { mutate: userLogin } = useMutation(async (loginInfo) => {
+    await signIn(loginInfo);
+  });
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -26,22 +32,26 @@ function SignInPage() {
     };
 
     try {
-      await signIn(loginInfo);
-      toast.success('로그인 되었습니다.');
-      setTimeout(() => {
-        toast.dismiss();
-        navigate('/');
-      }, 1000);
+      userLogin(loginInfo, {
+        onSuccess: () => {
+          toast.success('로그인 되었습니다.');
+          setTimeout(() => {
+            toast.dismiss();
+            navigate('/');
+          }, 1000);
+        },
+        onError: () => {
+          toast.error('입력하신 내용을 확인해주세요.');
+        },
+      });
     } catch (error) {
-      toast.error('입력하신 내용을 확인해주세요.');
+      toast.error('서버 오류');
     }
   };
 
   return (
     <>
-      <Helmet>
-        <title>로그인 페이지</title>
-      </Helmet>
+      <MetaTag title='로그인' description='이메일 로그인' />
       <Header
         search='search'
         back='back'
@@ -70,8 +80,10 @@ function SignInPage() {
             labelClass='sr-only'
           />
           <div className='mb-2 flex gap-2'>
-            <Link className='border-r px-4'>비밀번호 찾기</Link>
-            <Link className='px-1' to='/signup'>
+            <Link to='/find' className='border-r px-4 hover:text-primary'>
+              비밀번호 찾기
+            </Link>
+            <Link to='/signup' className='px-1 hover:text-primary'>
               이메일로 회원가입
             </Link>
           </div>
@@ -82,6 +94,7 @@ function SignInPage() {
             로그인
           </Button>
         </Form>
+
         <Toaster
           toastOptions={{
             duration: 1000,

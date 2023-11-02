@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { usePocketData } from '../api/usePocketData';
-import Header from '@/components/Header';
-import Entertainment from '../components/Entertainment';
-import LeisureCategory from '../components/LeisureCategory';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { usePocketData } from '@/api/usePocketData';
+import Header from '@/components/Header';
+import Entertainment from '@/components/Entertainment';
+import LeisureCategory from '@/components/LeisureCategory';
 
 function LeisureThemePage() {
   const { getListData: getLeisureData } = usePocketData('leisure');
@@ -37,7 +36,7 @@ function LeisureThemePage() {
   filterData = leisureData?.filter((leisure) => leisure.largeCategory === `${id}`);
 
   return (
-    <div>
+    <div className='pb-20'>
       <Header
         className='ml-10 text-xl font-semibold'
         back='back'

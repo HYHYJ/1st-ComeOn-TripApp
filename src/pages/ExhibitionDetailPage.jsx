@@ -1,34 +1,28 @@
 import { usePocketData } from '@/api/usePocketData';
-import Header from '@/components/Header';
-import LeisureInfoCategory from '@/components/LeisureInfoCategory';
-import LeisureProduct from '@/components/LeisureProduct';
-import LeisureProductInfo from '@/components/LeisureProductInfo';
-import Spinner from '@/components/Spinner';
 import { getPbImageURL } from '@/utils/getPbImageURL';
 import { numberWithComma } from '@/utils/numberWithComma';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import Header from '@/components/Header';
+import LeisureInfoCategory from '@/components/LeisureInfoCategory';
+import LeisureProduct from '@/components/LeisureProduct';
+import LeisureProductInfo from '@/components/LeisureProductInfo';
+import Spinner from '@/components/Spinner';
+import CartController from '@/components/CartController';
 
 function ExhibitionDetailPage() {
   let { id } = useParams();
 
   const { getIdData } = usePocketData('exhibition');
-  const { data, isLoading } = useQuery(['exhibition', id], () => getIdData(id, { expand: 'product' }));
-  console.log(data);
+  const { data, isLoading } = useQuery(['exhibition', id], () =>
+    getIdData(id, { expand: 'product' }),
+  );
+
   const productData = data?.expand?.product;
-  console.log(productData);
 
   const [selectCategory, setSelectCategory] = useState('상품선택');
-  // const [count, setCount] = useState(0);
-  // console.log(count);
-  // const handleCountUp = () => {
-  //   setCount(count + 1);
-  // };
-
-  // const handleCountDown = () => {
-  //   setCount(count - 1);
-  // };
 
   const handleChangeCategory = (category) => {
     setSelectCategory(category);
@@ -43,7 +37,7 @@ function ExhibitionDetailPage() {
   return (
     <>
       <Header className='ml-10 text-xl font-semibold ' back='back' search='search' cart='cart' />
-      <section className='pb-[100px]'>
+      <section className='pb-[140px]'>
         <img className='w-full' key={data.id} src={getPbImageURL(data, 'main')} alt={brand} />
         <div className='mx-5 my-4'>
           <div className='flex justify-between'>
@@ -80,7 +74,11 @@ function ExhibitionDetailPage() {
               <span className='text-[#616161]'>~ 2024.02.09</span>
             </div>
           </div>
-          <img src={getPbImageURL(data, 'detail')} alt='' className='border-none rounded-[4px] w-full' />
+          <img
+            src={getPbImageURL(data, 'detail')}
+            alt=''
+            className='w-full rounded-[4px] border-none'
+          />
         </div>
 
         <div className='h-2 w-full bg-slate-300'></div>
@@ -92,7 +90,9 @@ function ExhibitionDetailPage() {
 
         {selectCategory === '상품선택' && <LeisureProduct data={data} productData={productData} />}
         {selectCategory === '이용안내' && <LeisureProductInfo data={data} />}
+        <CartController />
       </section>
+      <Toaster />
     </>
   );
 }

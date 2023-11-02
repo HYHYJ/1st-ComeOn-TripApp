@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getPbImageURL } from '@/utils/getPbImageURL';
 
 function MyList({
   src = '/Myzipedairplane.jpg',
@@ -42,7 +41,7 @@ function MyList({
             <img src={src} alt={alt} className=' aspect-square h-full w-full' />
           </div>
           <ul
-            className={`box-border flex flex-col gap-0 overflow-hidden text-ellipsis sm:pt-3 ${className0}`}
+            className={`box-border flex flex-col gap-0 overflow-hidden text-ellipsis sm:py-3 ${className0}`}
           >
             <li
               className={` text-md box-border overflow-hidden text-ellipsis whitespace-nowrap font-bold sm:text-lg  ${className1}`}
@@ -63,7 +62,7 @@ function MyList({
               src='/myBlueArrow.svg'
               className={`absolute right-2 w-5 opacity-0 
             ${isActive ? 'sm:opacity-100' : ''}`}
-              alt=''
+              alt='상세보기'
             />
           </div>
         </div>

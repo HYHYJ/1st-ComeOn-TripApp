@@ -1,7 +1,7 @@
-import Header from '@/components/Header';
 import { usePocketData } from '@/api/usePocketData';
-import { useQuery } from '@tanstack/react-query';
 import { getPbImageURL } from '@/utils/getPbImageURL';
+import { useQuery } from '@tanstack/react-query';
+import Header from '@/components/Header';
 
 function LeisureListPage() {
   const { getListData: getExhibitionListData } = usePocketData('exhibitionList');
@@ -12,16 +12,15 @@ function LeisureListPage() {
   return (
     <>
       <Header className='ml-10 text-xl font-semibold' back='back' search='search' cart='cart' />
-      <section className='mx-5'>
-        <h2 className='text-[25px] font-bold mb-3'>기획전</h2>
+      <section className='mx-5 pb-20'>
+        <h2 className='mb-3 text-[25px] font-bold'>기획전</h2>
         {exhibitionListData?.map((item) => (
           <article
             key={item.id}
             style={{
               backgroundImage: `url(${getPbImageURL(item, 'photo')})`,
             }}
-                className='bg-contain h-[158px] mb-3 flex flex-col justify-end px-5 py-3
-                ' 
+            className='mb-3 flex h-[158px] flex-col justify-end bg-contain px-5 py-3'
           >
             {/* <img src={getPbImageURL(item, 'photo')} alt={item.title} /> */}
             <ul className=' text-white'>

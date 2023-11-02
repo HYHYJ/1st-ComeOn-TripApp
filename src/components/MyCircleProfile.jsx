@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../components/Button';
 import { getPbImageURL } from '@/utils/getPbImageURL';
-import useAuthStore from '../store/useAuthStore';
+import Button from '@/components/Button';
+import useAuthStore from '@/store/useAuthStore';
 
 function MyCircleProfile({ towhere, imgalt = '내 프로필 사진' }) {
   const user = useAuthStore((state) => state.user);
@@ -20,17 +20,19 @@ function MyCircleProfile({ towhere, imgalt = '내 프로필 사진' }) {
 
   return (
     <section className='mb-10 flex items-center justify-center'>
-      <Link to={towhere} tabIndex='-1'>
-        <Button
-          type='button'
-          className='mt-12  h-full overflow-hidden
-            rounded-full border-2 border-secondary bg-gray object-cover shadow-md'
-        >
-          <div className='aspect-square h-full w-full min-w-[90px] max-w-[90px] overflow-hidden   object-cover sm:max-h-[100px] sm:min-h-[100px] sm:min-w-[100px] sm:max-w-[100px] md:max-h-[120px] md:min-h-[120px] md:min-w-[120px] md:max-w-[120px]'>
-            <img src={avatarSrc} alt={imgalt} />
-          </div>
-        </Button>
-      </Link>
+      <Button
+        type='button'
+        className='relative mt-12 h-full overflow-hidden rounded-full border-2 border-secondary bg-gray shadow-md'
+        style={{ width: '120px', height: '120px' }}
+      >
+        <Link to={towhere}>
+          <img
+            src={avatarSrc}
+            alt={imgalt}
+            className='absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transform object-cover'
+          />
+        </Link>
+      </Button>
     </section>
   );
 }

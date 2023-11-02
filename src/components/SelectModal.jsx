@@ -15,7 +15,7 @@ function SelectModal({ title, category, isModalOpen, closeModal, handleFunction 
 
         <h3 className='mb-5 mt-[-36px] text-center text-[18px] font-bold'>{title}</h3>
         <div>
-          <span className='text-[18px] font-bold'>주요역</span>
+          <span className='text-[18px] font-bold'>주요 공항</span>
           <div className='flex flex-wrap justify-around gap-3 text-[14px]'>
             {category.map((item) => {
               return (

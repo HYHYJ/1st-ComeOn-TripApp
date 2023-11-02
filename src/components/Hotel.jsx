@@ -1,27 +1,15 @@
 import { getPbImageURL } from '@/utils/getPbImageURL';
 import { numberWithComma } from '@/utils/numberWithComma';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function Hotel({ data, selectCategory }) {
-  let filterData;
-
-  switch (selectCategory) {
-    case '휴가에딱':
-      filterData = data.filter((hotel) => hotel.category === '휴가에딱');
-      break;
-    case '도쿄':
-      filterData = data.filter((hotel) => hotel.category === '도쿄');
-      break;
-    case '강원':
-      filterData = data.filter((hotel) => hotel.category === '강원');
-      break;
-    default:
-      filterData = data.filter((hotel) => hotel.category === selectCategory);
-      break;
-  }
+  const filterData = data.filter((hotel) => {
+    return selectCategory === '' ? true : hotel.category === selectCategory;
+  });
 
   return (
-    <div role='ListWrapper' className='flex justify-center'>
+    <div className='flex justify-center'>
       <ul className='grid grid-cols-4 gap-4 max-[610px]:grid-cols-2'>
         {filterData?.map((item) => (
           <li key={item.id} className='py-1 hover:scale-105 max-[610px]:px-2 max-[360px]:px-0'>
@@ -49,3 +37,8 @@ function Hotel({ data, selectCategory }) {
 }
 
 export default Hotel;
+
+Hotel.propTypes = {
+  data: PropTypes.array,
+  selectCategory: PropTypes.string,
+};

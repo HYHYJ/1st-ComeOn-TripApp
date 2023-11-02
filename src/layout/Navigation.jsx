@@ -16,12 +16,19 @@ function Navigation() {
             <img
               src={isActive === 'location' ? '/locationActive.svg' : '/location.svg'}
               alt='지역'
+              width='29'
+              height='29'
             />
           </NavLink>
         </li>
         <li>
           <NavLink to='/around' onClick={() => handleIsActive('around')}>
-            <img src={isActive === 'around' ? '/aroundActive.svg' : '/around.svg'} alt='내주변' />
+            <img
+              src={isActive === 'around' ? '/aroundActive.svg' : '/around.svg'}
+              alt='내주변'
+              width='29'
+              height='29'
+            />
           </NavLink>
         </li>
         <li>
@@ -30,17 +37,27 @@ function Navigation() {
             onClick={() => handleIsActive('home')}
             className='mb-8 flex rounded-full bg-primary p-3 shadow-md'
           >
-            <img src='/logoHome.svg' alt='홈' />
+            <img src='/logoHome.svg' alt='홈' width='29' height='29' />
           </NavLink>
         </li>
         <li>
           <NavLink to='/wish' onClick={() => handleIsActive('heart')}>
-            <img src={isActive === 'heart' ? '/heartActive.svg' : '/heart.svg'} alt='찜목록' />
+            <img
+              src={isActive === 'heart' ? '/heartActive.svg' : '/heart.svg'}
+              alt='찜목록'
+              width='29'
+              height='29'
+            />
           </NavLink>
         </li>
         <li>
           <NavLink to='/mypage' onClick={() => handleIsActive('my')}>
-            <img src={isActive === 'my' ? '/myActive.svg' : '/my.svg'} alt='마이페이지' />
+            <img
+              src={isActive === 'my' ? '/myActive.svg' : '/my.svg'}
+              alt='마이페이지'
+              width='29'
+              height='29'
+            />
           </NavLink>
         </li>
       </ul>

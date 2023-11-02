@@ -1,5 +1,5 @@
-import Header from '@/components/Header';
 import { Link } from 'react-router-dom';
+import Header from '@/components/Header';
 function AppInstallPage() {
   return (
     <>
@@ -10,7 +10,9 @@ function AppInstallPage() {
         className='ml-10 text-xl font-semibold'
         title='다운로드'
       />
-      <Link to={'/'}><img src='/AppInstall.png' alt='앱 설치' /></Link>
+      <Link to={'/'}>
+        <img src='/AppInstall.png' alt='앱 설치' />
+      </Link>
     </>
   );
 }

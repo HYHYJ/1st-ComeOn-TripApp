@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 function HotelList({ title, subtitle, children }) {
   return (
     <article className='mx-auto py-5'>
@@ -8,3 +10,9 @@ function HotelList({ title, subtitle, children }) {
   );
 }
 export default HotelList;
+
+HotelList.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  children: PropTypes.node,
+};

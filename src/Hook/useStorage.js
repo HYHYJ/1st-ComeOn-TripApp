@@ -4,11 +4,16 @@ function useStorage(key, defaultValue) {
 
   const [storageData, setStorageData] = useState(() => {
     try {
-      return getData(key);
+      const storedData = getData(key);
+      if (storedData === null) {
+        setData(key, defaultValue);
+        return defaultValue;
+      }
+      return storedData;
     } catch (error) {
       return defaultValue;
     }
-  });
+  })
 
   const update = useCallback(
     (nextData) => {
